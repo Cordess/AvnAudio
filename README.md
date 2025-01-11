@@ -1,3 +1,7 @@
+Hier das Quellvideo. Mit einigen Beschreibungen bzgl. Workarounds für ffmpeg(header im buffer) und Javascript beschreibungen
+https://www.youtube.com/watch?v=FGk4cTgWbZY
+
+
 # AvnAudio
 
 A Blazor Component for recording audio in real time, providing audio buffers in real-time. 
