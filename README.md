@@ -1,6 +1,11 @@
 Hier das Quellvideo. Mit einigen Beschreibungen bzgl. Workarounds für ffmpeg(header im buffer) und Javascript beschreibungen
 https://www.youtube.com/watch?v=FGk4cTgWbZY
 
+Zeitpunkt 25:40 spricht Carl Franklin(Danke!) das Problem mit der Headergröße an. 
+Hierfür scheint es eine Lösung mit ffmpeg zu geben:
+https://community.gumlet.com/t/how-can-i-use-the-ffmpeg-to-determine-the-codec-header-size-from-a-webm-vp9-stream/1584/2
+Muss erst noch ausgetestet werden!
+
 
 # AvnAudio
 
