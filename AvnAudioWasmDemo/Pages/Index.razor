@@ -48,8 +48,7 @@
     bool RecordButtonDisabled = true;       // for enabling/disabling the record button
     bool StopRecordButtonDisabled = true;   // for enabling/disabling the stop button
     string SelectedInputDeviceId = null;    // id of the selected recording device
-    string WebMFileName = string.Empty;      // Name of the .webm file to save to
-    Stream WebMFileStream;                  // Stream for writing to the .webm file
+    MemoryStream AudioDataStream;           // In-memory stream for audio data (WASM compatible)
     long BytesRecorded = 0;                 // We keep track of total bytes recorded
 
     // Stop button clicked
@@ -64,13 +63,14 @@
     // Occurs when a new buffer arrives
     void AudioBufferRecorded(AudioBuffer buffer)
     {
-        if (WebMFileStream.CanWrite)
+        if (AudioDataStream != null && AudioDataStream.CanWrite)
         {
-            // Write the data to the file
-            WebMFileStream.Write(buffer.Data, 0, buffer.Data.Length);
+            // Write the data to the memory stream
+            AudioDataStream.Write(buffer.Data, 0, buffer.Data.Length);
             BytesRecorded += buffer.Data.Length;
             // Update the status
-            Status = $"Received {buffer.Data.Length} bytes at {DateTime.Now.ToLongTimeString()}";
+            Status = $"Received {buffer.Data.Length} bytes (Total: {BytesRecorded:N0} bytes) at {DateTime.Now.ToLongTimeString()}";
+            StateHasChanged();
         }
     }
 
@@ -83,34 +83,66 @@
     // Occurs when the recording stops
     async Task RecordingStopped()
     {
-        Status = "Recording Stopped";
-        // Close the file
-        WebMFileStream.Close();
-        // read the data 
-        var bytes = File.ReadAllBytes(WebMFileName);
-        // save the file, and it downloads automatically.
-        await BlazorFileSaver.SaveAsBase64("Recorded.webm", Convert.ToBase64String(bytes), "audio/webm");
+        Status = $"Recording Stopped - Total: {BytesRecorded:N0} bytes recorded";
+
+        if (AudioDataStream != null && BytesRecorded > 0)
+        {
+            // Get the recorded data from memory stream
+            var bytes = AudioDataStream.ToArray();
+            Status = $"Saving {bytes.Length:N0} bytes...";
+            StateHasChanged();
+
+            // save the file, and it downloads automatically.
+            await BlazorFileSaver.SaveAsBase64("Recorded.webm", Convert.ToBase64String(bytes), "audio/webm");
+
+            Status = $"File saved successfully! ({bytes.Length:N0} bytes)";
+
+            // Clean up
+            AudioDataStream.Dispose();
+            AudioDataStream = null;
+        }
+        else
+        {
+            Status = "Error: Recording stopped but no data was recorded! Check browser console for details.";
+        }
+
+        StateHasChanged();
     }
 
     // The Record button was clicked
     async Task StartRecording()
     {
+        if (string.IsNullOrEmpty(SelectedInputDeviceId))
+        {
+            Status = "Error: Please select a microphone first!";
+            StateHasChanged();
+            return;
+        }
+
         BytesRecorded = 0;  // initialize
 
-        // Create a temp file
-        WebMFileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\temp.webm";
-        if (File.Exists(WebMFileName))
-            File.Delete(WebMFileName);
-        
-        // Open it for writing
-        WebMFileStream = File.OpenWrite(WebMFileName);
+        // Clean up any existing stream
+        if (AudioDataStream != null)
+        {
+            AudioDataStream.Dispose();
+        }
+
+        // Create a new memory stream for recording (WASM compatible)
+        AudioDataStream = new MemoryStream();
+
+        // DEBUG: Log the selected device ID
+        Status = $"Starting recording with deviceId: {SelectedInputDeviceId}";
+        StateHasChanged();
 
         // Tell the AudioRecorder component to start recording
         await audioRecorder.StartRecording(SelectedInputDeviceId);
-        
+
         // Enable/disable buttons
         RecordButtonDisabled = true;
         StopRecordButtonDisabled = false;
+
+        Status = "Recording in progress...";
+        StateHasChanged();
     }
 
     // Occurs when the user selects an input device

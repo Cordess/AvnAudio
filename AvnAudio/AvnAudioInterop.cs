@@ -21,9 +21,12 @@ public class AvnAudioInterop : IAsyncDisposable
     /// <param name="jsRuntime"></param>
     public AvnAudioInterop(IJSRuntime jsRuntime)
     {
+        // Add version to force cache refresh when assembly version changes
+        var version = typeof(AvnAudioInterop).Assembly.GetName().Version?.ToString() ?? "1.0.0";
+
         // Load the .js file into a Task to get ready for access
         moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-            "import", "./_content/AvnAudio/avnAudio.js").AsTask());
+            "import", $"./_content/AvnAudio/avnAudio.js?v={version}").AsTask());
     }
 
     /// <summary>
