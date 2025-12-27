@@ -364,3 +364,6 @@ FodyWeavers.xsd
 /AvnAudioSignalRDemo/Server/ffmpeg.exe
 /AvnAudioSignalRDemo/Server/ffplay.exe
 /AvnAudioSignalRDemo/Server/ffprobe.exe
+
+# Local configuration files with sensitive data
+**/wwwroot/appsettings.Local.json

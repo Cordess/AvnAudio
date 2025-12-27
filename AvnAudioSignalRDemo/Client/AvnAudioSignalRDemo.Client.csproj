@@ -8,11 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="7.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AvnAudioHttpClient\AvnAudioHttpClient.csproj" />
     <ProjectReference Include="..\..\AvnAudio\AvnAudio.csproj" />
     <ProjectReference Include="..\Shared\AvnAudioSignalRDemo.Shared.csproj" />
   </ItemGroup>

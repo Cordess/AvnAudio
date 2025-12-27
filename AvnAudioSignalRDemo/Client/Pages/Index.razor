@@ -1,36 +1,64 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Authorization
+
+@page "/"
 @using System.Security.Cryptography;
 @inject HttpClient httpClient;
 
+
 <PageTitle>Index</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <div style="background: lightgreen; padding: 10px; margin-bottom: 10px;">
+            <h3>✅ AUTHORIZED</h3>
+            <p>User: @context.User.Identity?.Name</p>
+            <p>Is Authenticated: @context.User.Identity?.IsAuthenticated</p>
+        </div>
+        <h1>Audio Recorder</h1>
 
-<h1>Audio Recorder</h1>
+        <AudioRecorder @ref="audioRecorder"
+                       SampleRate=@SampleRate
+                       Channels=@Channels
+                       TimeSlice=@TimeSlice
+                       BufferRecorded="AudioBufferRecorded"
+                       RecordingStarted="RecordingStarted"
+                       RecordingStopped="RecordingStopped"
+                       InputDevices="AudioInputDevices"
+                       AudioStatusChanged="AudioStatusChanged" />
 
-<AudioRecorder @ref="audioRecorder"
-               SampleRate=@SampleRate
-               Channels=@Channels
-               TimeSlice=@TimeSlice
-               BufferRecorded="AudioBufferRecorded"
-               RecordingStarted="RecordingStarted"
-               RecordingStopped="RecordingStopped"
-               InputDevices="AudioInputDevices"
-               AudioStatusChanged="AudioStatusChanged" />
+        <button class="btn btn-primary" @onclick="EnumerateDevices">Enumerate Devices</button>
 
-<button class="btn btn-primary" @onclick="EnumerateDevices">Enumerate Devices</button>
-
-<button disabled="@RecordButtonDisabled" class="btn btn-primary" @onclick="StartRecording">Start Recording</button>
-<button disabled="@StopRecordButtonDisabled" class="btn btn-primary" @onclick="StopRecording">Stop Recording</button>
+        <button disabled="@RecordButtonDisabled" class="btn btn-primary" @onclick="StartRecording">Start Recording</button>
+        <button disabled="@StopRecordButtonDisabled" class="btn btn-primary" @onclick="StopRecording">Stop Recording</button>
 
 
-<p>@Status</p>
+        <p>@Status</p>
 
-<h5>Input Devices</h5>
-<select size="16" style="width:100%;" @onchange="InputDeviceSelected">
-    @foreach (var device in AudioInputDevices)
-    {
-        <option value="@device.deviceId">@device.label</option>
-    }
-</select>
+        <h5>Input Devices</h5>
+        <select size="16" style="width:100%;" @onchange="InputDeviceSelected">
+            @foreach (var device in AudioInputDevices)
+            {
+                <option value="@device.deviceId">@device.label</option>
+            }
+        </select>
+    </Authorized>
+    <NotAuthorized>
+        <div style="background: lightcoral; padding: 10px; margin-bottom: 10px;">
+            <h3>❌ NOT AUTHORIZED</h3>
+            <p>User: @context.User.Identity?.Name</p>
+            <p>Is Authenticated: @context.User.Identity?.IsAuthenticated</p>
+            <p>Rendering RedirectToLogin...</p>
+        </div>
+        <RedirectToLogin />
+    </NotAuthorized>
+    <Authorizing>
+        <div style="background: lightyellow; padding: 10px;">
+            <h3>⏳ AUTHORIZING...</h3>
+            <p>Checking authentication status...</p>
+        </div>
+    </Authorizing>
+</AuthorizeView>
+
+
 
 @code {
     int Channels = 1;           // 1=mono, 2=stereo

@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.InvokeVoidAsync("console.log", "=== RedirectToLogin: START ===");
+        await JS.InvokeVoidAsync("console.log", $"Current URI: {Navigation.Uri}");
+
+        var returnUrl = Uri.EscapeDataString(Navigation.Uri);
+        var loginUrl = $"authentication/login?returnUrl={returnUrl}";
+
+        await JS.InvokeVoidAsync("console.log", $"Navigating to: {loginUrl}");
+        Navigation.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(Navigation.Uri)}");
+
+        await JS.InvokeVoidAsync("console.log", "=== RedirectToLogin: END ===");
+    }
+}

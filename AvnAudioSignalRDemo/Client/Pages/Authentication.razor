@@ -1,0 +1,25 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject IJSRuntime JS
+@attribute [AllowAnonymous]
+
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn>
+        <p>Logging in...</p>
+    </LoggingIn>
+    <CompletingLoggingIn>
+        <p>Completing login...</p>
+    </CompletingLoggingIn>
+    <LogInFailed>
+        <p>Login failed. Please check the browser console for errors.</p>
+    </LogInFailed>
+</RemoteAuthenticatorView>
+
+@code {
+    [Parameter] public string? Action { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.InvokeVoidAsync("console.log", $"Authentication page loaded. Action: {Action}");
+    }
+}
