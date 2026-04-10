@@ -1,0 +1,7 @@
+{
+  "name": "avnaudio-workspace",
+  "version": "0.0.0",
+  "devDependencies": {
+    "nx": "22.6.4"
+  }
+}

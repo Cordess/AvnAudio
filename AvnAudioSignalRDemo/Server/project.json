@@ -1,0 +1,27 @@
+{
+  "name": "AvnAudioSignalRDemo.Server",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet build AvnAudioSignalRDemo/Server/AvnAudioSignalRDemo.Server.csproj",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet run --project AvnAudioSignalRDemo/Server/AvnAudioSignalRDemo.Server.csproj",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet publish AvnAudioSignalRDemo/Server/AvnAudioSignalRDemo.Server.csproj -c Release",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

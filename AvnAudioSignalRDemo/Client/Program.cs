@@ -28,9 +28,6 @@ catch
 builder.Services.AddAvnHttpClient(options => options.Url = builder.HostEnvironment.BaseAddress)
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
-// Supply HttpClient instances that include access tokens when making requests to the server project
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ServerAPI"));
-
 // Required to use AvnAudio
 builder.Services.AddScoped<AvnAudioInterop>();
 

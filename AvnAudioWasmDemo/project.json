@@ -1,0 +1,27 @@
+{
+  "name": "AvnAudioWasmDemo",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet build AvnAudioWasmDemo/AvnAudioWasmDemo.csproj",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet run --project AvnAudioWasmDemo/AvnAudioWasmDemo.csproj",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet publish AvnAudioWasmDemo/AvnAudioWasmDemo.csproj -c Release",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

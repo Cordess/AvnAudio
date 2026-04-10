@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Server",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build: Server",
+            "program": "${workspaceFolder}/AvnAudioSignalRDemo/Server/bin/Debug/net7.0/AvnAudioSignalRDemo.Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/AvnAudioSignalRDemo/Server",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Client (Browser)",
+            "type": "blazorwasm",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/AvnAudioSignalRDemo/Client",
+            "url": "https://localhost:7220"
+        },
+        {
+            "name": "WasmDemo (Browser)",
+            "type": "blazorwasm",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/AvnAudioWasmDemo"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack (Server + Client)",
+            "configurations": ["Server", "Client (Browser)"],
+            "stopAll": true
+        }
+    ]
+}

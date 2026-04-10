@@ -367,3 +367,7 @@ FodyWeavers.xsd
 
 # Local configuration files with sensitive data
 **/wwwroot/appsettings.Local.json
+
+.nx/installation
+.nx/cache
+.nx/workspace-data
